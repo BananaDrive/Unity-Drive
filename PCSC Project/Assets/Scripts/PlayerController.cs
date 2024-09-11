@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour
         if (sprintMode)
             temp.x = Input.GetAxisRaw("Vertical") * speed * sprintMultiplier;
 
-        if (Input.GetKey(KeyCode.LeftShift) && )
+        if (Input.GetKeyUp(KeyCode.LeftShift))
             sprintMode = false;
 
         temp.z = Input.GetAxisRaw("Horizontal") * speed;
