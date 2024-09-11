@@ -63,7 +63,7 @@ public class PlayerController : MonoBehaviour
         {
             print(Input.GetAxisRaw("Vertical"));
             if (Input.GetKey(KeyCode.LeftShift) && (Input.GetAxisRaw("Vertical") > 0))
-                sprintMode = true;
+                sprintMode = !sprintMode;
 
             if (Input.GetAxisRaw("Vertical") <= 0)
                 sprintMode = false;
@@ -76,8 +76,8 @@ public class PlayerController : MonoBehaviour
         if (sprintMode)
             temp.x = Input.GetAxisRaw("Vertical") * speed * sprintMultiplier;
 
-        if (Input.GetKeyUp(KeyCode.LeftShift))
-            sprintMode = false;
+        //if (Input.GetKey(KeyCode.LeftShift))
+           // sprintMode = false;
 
         temp.z = Input.GetAxisRaw("Horizontal") * speed;
 
