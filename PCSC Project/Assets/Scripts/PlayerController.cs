@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     public float jumpheight = 5.0f;
 
     [Header("User Settings")]
+    public bool sprintToggleBtn = true;
     public bool sprintToggleOption = false;
     public float mouseSensitivity = 2.0f;
     public float Xsensitivity = 2.0f;
@@ -56,7 +57,6 @@ public class PlayerController : MonoBehaviour
                 sprintMode = true;
             if (Input.GetKeyUp(KeyCode.LeftShift))
                 sprintMode = false;
-            print(sprintMode);
         }
 
         if (sprintToggleOption)
@@ -76,9 +76,10 @@ public class PlayerController : MonoBehaviour
         if (sprintMode)
             temp.x = Input.GetAxisRaw("Vertical") * speed * sprintMultiplier;
 
-        //if (Input.GetKey(KeyCode.LeftShift))
-           // sprintMode = false;
-
+        if (sprintToggleBtn)
+            if (Input.GetKeyDown(KeyCode.P))
+                sprintToggleOption = (sprintToggleOption ? false : true);
+       
         temp.z = Input.GetAxisRaw("Horizontal") * speed;
 
         if (Input.GetKeyDown(KeyCode.Space) && Physics.Raycast(transform.position, -transform.up, groundDetectDistance))
