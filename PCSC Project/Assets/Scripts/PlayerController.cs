@@ -77,7 +77,7 @@ public class PlayerController : MonoBehaviour
             temp.x = Input.GetAxisRaw("Vertical") * speed * sprintMultiplier;
 
         if (sprintToggleBtn)
-            if (Input.GetKeyDown(KeyCode.P))
+            if (Input.GetKeyDown(KeyCode.Delete))
                 sprintToggleOption = (sprintToggleOption ? false : true);
        
         temp.z = Input.GetAxisRaw("Horizontal") * speed;
