@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Security.Cryptography;
 using UnityEngine;
 //Access Modifier, Data Type, Name
 public class PlayerController : MonoBehaviour
@@ -11,7 +9,16 @@ public class PlayerController : MonoBehaviour
 
     Vector2 camRotation;
 
+    public Transform weaponSlot;
+
     public bool sprintMode = false;
+    [Header("Player Stats")]
+    public int maxHealth = 5;
+    public int currentHealth = 5;
+    public int healthRestore = 1;
+
+    [Header("Weapon Stats")]
+    public bool canFire = true;
 
     [Header("Movement Settings")]
     public float speed = 10.0f;
@@ -86,5 +93,25 @@ public class PlayerController : MonoBehaviour
             temp.y = jumpheight;
 
         myRB.velocity = (temp.x * transform.forward) + (temp.z * transform.right) + (temp.y * transform.up);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if((currentHealth < maxHealth) && collision.gameObject.tag == "healthPickUp")
+        {
+            currentHealth += healthRestore;
+
+            if (currentHealth > maxHealth)
+                currentHealth = maxHealth;
+
+            Destroy(collision.gameObject);
+        }
+        if (collision.gameObject.tag == "Weapon")
+            collision.gameObject.transform.SetParent(weaponSlot);
+    }
+    IEnumerator cooldownFire(float time)
+    {
+        yield return new WaitForSeconds(time);
+        canFire = true;
     }
 }
