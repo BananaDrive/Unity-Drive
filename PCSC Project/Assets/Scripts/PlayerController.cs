@@ -18,6 +18,14 @@ public class PlayerController : MonoBehaviour
     public int healthRestore = 1;
 
     [Header("Weapon Stats")]
+    public int weaponId = 0;
+    public int fireMode = 0;
+    public float fireRate = 0;
+    public float maxAmmo = 0;
+    public float currentAmmo = 0;
+    public float currentClip = 0;
+    public float clipSize = 0;
+    public float reloadAmount = 0;
     public bool canFire = true;
 
     [Header("Movement Settings")]
@@ -56,6 +64,13 @@ public class PlayerController : MonoBehaviour
         playerCam.transform.localRotation = Quaternion.AngleAxis(camRotation.y, Vector3.left);
         transform.localRotation = Quaternion.AngleAxis(camRotation.x, Vector3.up);
 
+        if(Input.GetMouseButton(0) && canFire && currentClip > 0)
+        {
+            canFire = false;
+            currentClip--;
+            StartCoroutine("cooldownFire");
+        }
+
         Vector3 temp = myRB.velocity;
 
         if (!sprintToggleOption)
@@ -65,6 +80,9 @@ public class PlayerController : MonoBehaviour
             if (Input.GetKeyUp(KeyCode.LeftShift))
                 sprintMode = false;
         }
+
+        if (Input.GetKeyDown(KeyCode.R))
+            reloadClip();
 
         if (sprintToggleOption)
         {
@@ -95,6 +113,32 @@ public class PlayerController : MonoBehaviour
         myRB.velocity = (temp.x * transform.forward) + (temp.z * transform.right) + (temp.y * transform.up);
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Weapon")
+        {
+            other.gameObject.transform.position = weaponSlot.position;
+            other.gameObject.transform.SetParent(weaponSlot);
+
+            switch(other.gameObject.name)
+            { 
+                case "Weapon 1":
+                    weaponId = 1;
+                    fireMode = 0;
+                    fireRate = 1f;
+                    maxAmmo = 100;
+                    currentAmmo = 25;
+                    currentClip = 5;
+                    clipSize = 5;
+                    reloadAmount = 5;
+                    break;
+
+                default:
+                    break;
+            }
+
+        }
+    }
     private void OnCollisionEnter(Collision collision)
     {
         if((currentHealth < maxHealth) && collision.gameObject.tag == "healthPickUp")
@@ -106,12 +150,48 @@ public class PlayerController : MonoBehaviour
 
             Destroy(collision.gameObject);
         }
-        if (collision.gameObject.tag == "Weapon")
-            collision.gameObject.transform.SetParent(weaponSlot);
+
+        if((currentAmmo < maxAmmo) && collision.gameObject.tag == "ammoPickUp")
+        {
+            currentAmmo += reloadAmount;
+
+            if (currentAmmo > maxAmmo)
+                currentAmmo = maxAmmo;
+
+            Destroy(collision.gameObject);
+        }
+        
     }
-    IEnumerator cooldownFire(float time)
+
+    public void reloadClip()
     {
-        yield return new WaitForSeconds(time);
+        if (currentClip >= clipSize)
+            return;
+
+        else
+        {
+            float reloadCount = clipSize - currentClip;
+
+            if (currentAmmo < reloadCount)
+            {
+                currentClip += currentAmmo;
+
+                currentAmmo = 0;
+                return;
+            }
+
+            else 
+            {
+                currentClip += reloadCount;
+
+                currentAmmo -= reloadCount;
+                return;
+            }
+        }
+    }
+    IEnumerator cooldownFire()
+    {
+        yield return new WaitForSeconds(fireRate);
         canFire = true;
     }
 }
