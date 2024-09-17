@@ -699,11 +699,11 @@ PlayerSettings:
     m_VersionName: 
   apiCompatibilityLevel: 6
   activeInputHandler: 0
-  cloudProjectId: 
+  cloudProjectId: eb1a55c3-a683-4031-8e72-29b86d90f0e3
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: 
-  organizationId: 
+  projectName: PCSC Project
+  organizationId: banana_drive
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   playerDataPath: 
