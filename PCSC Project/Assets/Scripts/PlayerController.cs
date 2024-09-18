@@ -28,6 +28,10 @@ public class PlayerController : MonoBehaviour
     public float reloadAmount = 0;
     public bool canFire = true;
 
+    [Header("projectiles")]
+    public GameObject bullet;
+    public float bulletSpeed = 20f;
+
     [Header("Movement Settings")]
     public float speed = 10.0f;
     public float sprintMultiplier = 2.5f;
@@ -66,6 +70,9 @@ public class PlayerController : MonoBehaviour
 
         if(Input.GetMouseButton(0) && canFire && currentClip > 0)
         {
+            GameObject b = Instantiate(bullet, weaponSlot.position, weaponSlot.rotation);
+            b.GetComponent<Rigidbody>().AddForce(playerCam.transform.forward * bulletSpeed);
+
             canFire = false;
             currentClip--;
             StartCoroutine("cooldownFire");
@@ -131,6 +138,17 @@ public class PlayerController : MonoBehaviour
                     currentClip = 5;
                     clipSize = 5;
                     reloadAmount = 5;
+                    break;
+
+                case "Weapon 2":
+                    weaponId = 2;
+                    fireMode = 0;
+                    fireRate = .1f;
+                    maxAmmo = 250;
+                    currentAmmo = 150;
+                    currentClip = 50;
+                    clipSize = 50;
+                    reloadAmount = 50;
                     break;
 
                 default:
