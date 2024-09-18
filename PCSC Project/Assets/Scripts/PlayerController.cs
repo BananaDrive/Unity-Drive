@@ -30,7 +30,8 @@ public class PlayerController : MonoBehaviour
 
     [Header("projectiles")]
     public GameObject bullet;
-    public float bulletSpeed = 20f;
+    public float bulletSpeed = 0;
+    public float bulletLifeSpan = 0;
 
     [Header("Movement Settings")]
     public float speed = 10.0f;
@@ -68,10 +69,11 @@ public class PlayerController : MonoBehaviour
         playerCam.transform.localRotation = Quaternion.AngleAxis(camRotation.y, Vector3.left);
         transform.localRotation = Quaternion.AngleAxis(camRotation.x, Vector3.up);
 
-        if(Input.GetMouseButton(0) && canFire && currentClip > 0)
+        if(Input.GetMouseButton(0) && canFire && currentClip > 0 && weaponId >= 1)
         {
             GameObject b = Instantiate(bullet, weaponSlot.position, weaponSlot.rotation);
             b.GetComponent<Rigidbody>().AddForce(playerCam.transform.forward * bulletSpeed);
+            Destroy(b, bulletLifeSpan);
 
             canFire = false;
             currentClip--;
@@ -130,14 +132,17 @@ public class PlayerController : MonoBehaviour
             switch(other.gameObject.name)
             { 
                 case "Weapon 1":
+
                     weaponId = 1;
                     fireMode = 0;
-                    fireRate = 1f;
-                    maxAmmo = 100;
-                    currentAmmo = 25;
-                    currentClip = 5;
-                    clipSize = 5;
-                    reloadAmount = 5;
+                    fireRate = .1f;
+                    maxAmmo = 5000;
+                    currentAmmo = 5000;
+                    currentClip = 100;
+                    clipSize = 100;
+                    reloadAmount = 100;
+                    bulletLifeSpan = 2.5f;
+                    bulletSpeed = 2500;
                     break;
 
                 case "Weapon 2":
@@ -149,6 +154,8 @@ public class PlayerController : MonoBehaviour
                     currentClip = 50;
                     clipSize = 50;
                     reloadAmount = 50;
+                    bulletLifeSpan = 1f;
+                    bulletSpeed = 3000;
                     break;
 
                 default:

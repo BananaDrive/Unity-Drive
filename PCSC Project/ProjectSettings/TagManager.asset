@@ -6,6 +6,8 @@ TagManager:
   tags:
   - healthPickUp
   - Weapon
+  - Bullet
+  - Basic Enemy
   layers:
   - Default
   - TransparentFX
