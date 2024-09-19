@@ -17,6 +17,10 @@ public class PlayerController : MonoBehaviour
     public int currentHealth = 5;
     public int healthRestore = 1;
 
+    [Header("JetPack Stats")]
+    public bool JetPackOn = false;
+    public float JetPackPower = 1.5f;
+
     [Header("Weapon Stats")]
     public int weaponId = 0;
     public int fireMode = 0;
@@ -116,8 +120,11 @@ public class PlayerController : MonoBehaviour
        
         temp.z = Input.GetAxisRaw("Horizontal") * speed;
 
-        if (Input.GetKeyDown(KeyCode.Space) && Physics.Raycast(transform.position, -transform.up, groundDetectDistance))
+        if (Input.GetKeyDown(KeyCode.Space) && Physics.Raycast(transform.position, -transform.up, groundDetectDistance) && (JetPackOn = false))
             temp.y = jumpheight;
+
+        if (Input.GetKeyDown(KeyCode.Space) && (JetPackOn = true))
+            temp.y = jumpheight * JetPackPower;
 
         myRB.velocity = (temp.x * transform.forward) + (temp.z * transform.right) + (temp.y * transform.up);
     }
@@ -135,7 +142,7 @@ public class PlayerController : MonoBehaviour
 
                     weaponId = 1;
                     fireMode = 0;
-                    fireRate = .1f;
+                    fireRate = 1f;
                     maxAmmo = 5000;
                     currentAmmo = 5000;
                     currentClip = 100;
