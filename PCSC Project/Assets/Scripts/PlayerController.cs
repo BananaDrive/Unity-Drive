@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     Rigidbody myRB;
-    Camera playerCam;
+    Camera playerCam; 
 
     Vector2 camRotation;
 
@@ -75,10 +75,6 @@ public class PlayerController : MonoBehaviour
         playerCam.transform.localRotation = Quaternion.AngleAxis(camRotation.y, Vector3.left);
         transform.localRotation = Quaternion.AngleAxis(camRotation.x, Vector3.up);
 
-        if (
-
-
-
         if(Input.GetMouseButton(0) && canFire && currentClip > 0 && weaponId >= 1)
         {
             GameObject b = Instantiate(bullet, weaponSlot.position, weaponSlot.rotation);
@@ -126,11 +122,8 @@ public class PlayerController : MonoBehaviour
        
         temp.z = Input.GetAxisRaw("Horizontal") * speed;
 
-        if (Input.GetKeyDown(KeyCode.Space) && Physics.Raycast(transform.position, -transform.up, groundDetectDistance) && (JetPackOn = false))
+        if (Input.GetKeyDown(KeyCode.Space) && Physics.Raycast(transform.position, -transform.up, groundDetectDistance))
             temp.y = jumpheight;
-
-        if (Input.GetKeyDown(KeyCode.Space) && (JetPackOn = true))
-            temp.y = jumpheight * JetPackPower;
 
         myRB.velocity = (temp.x * transform.forward) + (temp.z * transform.right) + (temp.y * transform.up);
     }
@@ -216,6 +209,7 @@ public class PlayerController : MonoBehaviour
 
                 currentAmmo = 0;
                 return;
+                
             }
 
             else 
