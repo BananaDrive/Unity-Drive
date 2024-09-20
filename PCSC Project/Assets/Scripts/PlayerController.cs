@@ -12,10 +12,12 @@ public class PlayerController : MonoBehaviour
     public Transform weaponSlot;
 
     public bool sprintMode = false;
+
     [Header("Player Stats")]
     public int maxHealth = 5;
     public int currentHealth = 5;
     public int healthRestore = 1;
+    public bool flashlight = false;
 
     [Header("JetPack Stats")]
     public bool JetPackOn = false;
@@ -72,6 +74,10 @@ public class PlayerController : MonoBehaviour
 
         playerCam.transform.localRotation = Quaternion.AngleAxis(camRotation.y, Vector3.left);
         transform.localRotation = Quaternion.AngleAxis(camRotation.x, Vector3.up);
+
+        if (
+
+
 
         if(Input.GetMouseButton(0) && canFire && currentClip > 0 && weaponId >= 1)
         {
