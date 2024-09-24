@@ -166,6 +166,9 @@ MonoBehaviour:
   maxHealth: 5
   currentHealth: 5
   healthRestore: 1
+  flashlight: 0
+  JetPackOn: 0
+  JetPackPower: 1.5
   weaponId: 0
   fireMode: 0
   fireRate: 0

@@ -8,6 +8,7 @@ TagManager:
   - Weapon
   - Bullet
   - Basic Enemy
+  - MovingBasicEnemy
   layers:
   - Default
   - TransparentFX
