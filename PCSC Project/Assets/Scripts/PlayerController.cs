@@ -101,7 +101,6 @@ public class PlayerController : MonoBehaviour
 
         if (sprintToggleOption)
         {
-            print(Input.GetAxisRaw("Vertical"));
             if (Input.GetKey(KeyCode.LeftShift) && (Input.GetAxisRaw("Vertical") > 0))
                 sprintMode = !sprintMode;
 

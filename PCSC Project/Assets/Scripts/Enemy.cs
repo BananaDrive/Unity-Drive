@@ -27,15 +27,27 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Player == null)
+        {
+            Debug.LogError("Player Transform is not assigned!");
+            return;
+        }
+
         float distanceToPlayer = Vector3.Distance(Player.position, transform.position);
+        Debug.Log("Distance to Player:" + distanceToPlayer);
 
         if (distanceToPlayer > shootRange)
         {
+            Debug.Log("Following player...");
             FollowPlayer();
         }
         else
         {
-            Agent.isStopped = true;
+            if (Agent.isOnNavMesh)
+            {
+                Debug.Log("Stopping and aiming at player...");
+                Agent.isStopped = true;
+            }
             LookAtPlayer();
             ShootAtPlayer();
         }
