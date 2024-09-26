@@ -4,6 +4,7 @@ using UnityEngine;
 //Access Modifier, Data Type, Name
 public class PlayerController : MonoBehaviour
 {
+    //Variables
     Rigidbody myRB;
     Camera playerCam; 
 
@@ -67,6 +68,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Camera Movement
         camRotation.x += Input.GetAxisRaw("Mouse X") * mouseSensitivity;
         camRotation.y += Input.GetAxisRaw("Mouse Y") * mouseSensitivity;
 
@@ -75,6 +77,7 @@ public class PlayerController : MonoBehaviour
         playerCam.transform.localRotation = Quaternion.AngleAxis(camRotation.y, Vector3.left);
         transform.localRotation = Quaternion.AngleAxis(camRotation.x, Vector3.up);
 
+        //Weapon use
         if(Input.GetMouseButton(0) && canFire && currentClip > 0 && weaponId >= 1)
         {
             GameObject b = Instantiate(bullet, weaponSlot.position, weaponSlot.rotation);
@@ -86,6 +89,7 @@ public class PlayerController : MonoBehaviour
             StartCoroutine("cooldownFire");
         }
 
+        //Sprint Mechanics
         Vector3 temp = myRB.velocity;
 
         if (!sprintToggleOption)
@@ -96,9 +100,11 @@ public class PlayerController : MonoBehaviour
                 sprintMode = false;
         }
 
+        //Reloading
         if (Input.GetKeyDown(KeyCode.R))
             reloadClip();
 
+        //Sprint Toggle
         if (sprintToggleOption)
         {
             if (Input.GetKey(KeyCode.LeftShift) && (Input.GetAxisRaw("Vertical") > 0))
@@ -121,12 +127,14 @@ public class PlayerController : MonoBehaviour
        
         temp.z = Input.GetAxisRaw("Horizontal") * speed;
 
+        //Jumping
         if (Input.GetKeyDown(KeyCode.Space) && Physics.Raycast(transform.position, -transform.up, groundDetectDistance))
             temp.y = jumpheight;
 
         myRB.velocity = (temp.x * transform.forward) + (temp.z * transform.right) + (temp.y * transform.up);
     }
 
+    //Weapon pickup
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Weapon")
@@ -169,6 +177,7 @@ public class PlayerController : MonoBehaviour
 
         }
     }
+    //Pickups
     private void OnCollisionEnter(Collision collision)
     {
         if((currentHealth < maxHealth) && collision.gameObject.tag == "healthPickUp")
@@ -193,6 +202,7 @@ public class PlayerController : MonoBehaviour
         
     }
 
+    //Reloading
     public void reloadClip()
     {
         if (currentClip >= clipSize)
@@ -220,6 +230,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    //Weapon CoolDown
     IEnumerator cooldownFire()
     {
         yield return new WaitForSeconds(fireRate);
