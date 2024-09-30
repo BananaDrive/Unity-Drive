@@ -3,86 +3,40 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Enemy : MonoBehaviour
+public class EnemyAi : MonoBehaviour
 {
-    [Header("Enemy Settings")]
-    public Transform Player;
-    public float shootRange = 15f;
-    public float moveSpeed = 3.5f;
-    public float shotTime = 2.5f;
-    public GameObject bulletPrefab;
-    public Transform firePoint;
-    public float bulletSpeed = 5f;
+	public PlayerController player;
+	public NavMeshAgent agent;
 
-    [Header("Enemy Adv Settings")]
-    private NavMeshAgent Agent;
-    private float lastShotTime;
+	[Header("Enemy Stats")]
+	public int health = 3;
+	public int maxHealth = 5;
+	public int damageGiven = 1;
+	public int damageRecieved = 1;
+	public float pushBackForce = 10000;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        Agent = GetComponent<NavMeshAgent>();
-    }
+	// Start is called before the first frame update
+	void Start()
+	{
+		player = GameObject.Find("Player").GetComponent<PlayerController>();
+		agent = GetComponent<NavMeshAgent>();
+	}
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (Player == null)
-        {
-            Debug.LogError("Player Transform is not assigned!");
-            return;
-        }
+	// Update is called once per frame
+	void Update()
+	{
+		agent.destination = player.transform.position;
 
-        float distanceToPlayer = Vector3.Distance(Player.position, transform.position);
-        Debug.Log("Distance to Player:" + distanceToPlayer);
+		if (health <= 0)
+			Destroy(gameObject);
+	}
 
-        if (distanceToPlayer > shootRange)
-        {
-            Debug.Log("Following player...");
-            FollowPlayer();
-        }
-        else
-        {
-            if (Agent.isOnNavMesh)
-            {
-                Debug.Log("Stopping and aiming at player...");
-                Agent.isStopped = true;
-            }
-            LookAtPlayer();
-            ShootAtPlayer();
-        }
-        
-    }
-
-
-    void FollowPlayer()
-    {
-        Agent.isStopped = false;
-        Agent.SetDestination(Player.position);
-        Agent.speed = moveSpeed;
-    }
-
-    void LookAtPlayer()
-    {
-        Vector3 direction = (Player.position - transform.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
-    }
-
-    void ShootAtPlayer()
-    {
-        if (Time.time > lastShotTime + shotTime)
-        {
-            lastShotTime = Time.time;
-            Debug.Log("Shooting");
-            FireBullet();
-        }
-    }
-
-    void FireBullet()
-    {
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        Rigidbody rb = bullet.GetComponent<Rigidbody>();
-        rb.velocity = firePoint.forward * bulletSpeed;
-    }
+	private void OnCollisionEnter(Collision collision)
+	{
+		if (collision.gameObject.tag == "Bullet")
+		{
+			health -= damageRecieved;
+			Destroy(collision.gameObject);
+		}
+	}
 }
