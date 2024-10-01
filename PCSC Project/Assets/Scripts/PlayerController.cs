@@ -199,7 +199,12 @@ public class PlayerController : MonoBehaviour
 
             Destroy(collision.gameObject);
         }
-        
+
+        if (collision.gameObject.tag == "Basic Enemy")
+        {
+            currentHealth -= 1;
+        }
+
     }
 
     //Reloading
