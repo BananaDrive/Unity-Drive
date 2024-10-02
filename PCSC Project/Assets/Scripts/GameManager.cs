@@ -16,49 +16,60 @@ public class GameManager : MonoBehaviour
     public Image healthBar;
     public TextMeshProUGUI clipCounter;
     public TextMeshProUGUI AmmoCounter;
+    public TextMeshProUGUI HealthCounter;
 
     // Start is called before the first frame update
     void Start()
     {
-        PlayerData = GameObject.Find("Player").GetComponent<PlayerController>();
-        
+        if (SceneManager.GetActiveScene().buildIndex > 0)
+        {
+            PlayerData = GameObject.Find("Player").GetComponent<PlayerController>();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        healthBar.fillAmount = Mathf.Clamp((float) PlayerData.currentHealth / (float) PlayerData.maxHealth, 0, 1);
 
-        if (PlayerData.weaponId < 0)
+        if (SceneManager.GetActiveScene().buildIndex > 0)
         {
-            clipCounter.gameObject.SetActive(false);
-            AmmoCounter.gameObject.SetActive(false);
+            healthBar.fillAmount = Mathf.Clamp((float)PlayerData.currentHealth / (float)PlayerData.maxHealth, 0, 1);
+
+            if (PlayerData.weaponId < 0)
+            {
+                clipCounter.gameObject.SetActive(false);
+                AmmoCounter.gameObject.SetActive(false);
+            }
+            else
+            {
+                clipCounter.gameObject.SetActive(true);
+                AmmoCounter.gameObject.SetActive(true);
+
+                clipCounter.text = "Clip: " + PlayerData.currentClip + "/" + PlayerData.clipSize;
+                AmmoCounter.text = "Ammo: " + PlayerData.currentAmmo;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (!IsPaused)
+                {
+                    PauseMenu.SetActive(true);
+
+                    Cursor.lockState = CursorLockMode.None;
+                    Cursor.visible = true;
+
+                    Time.timeScale = 0;
+
+                    IsPaused = true;
+                }
+
+                else
+                    Resume();
+            }
         }
         else
         {
-            clipCounter.gameObject.SetActive(true);
-            AmmoCounter.gameObject.SetActive(true);
-
-            clipCounter.text = "Clip: " + PlayerData.currentClip + "/" + PlayerData.clipSize;
-            AmmoCounter.text = "Ammo: " + PlayerData.currentAmmo;
-        }
-
-        if(Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (!IsPaused)
-            {
-                PauseMenu.SetActive(true);
-
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-
-                Time.timeScale = 0;
-
-                IsPaused = true;
-            }
-
-            else
-                Resume();
+            Time.timeScale = 1;
         }
     }
 

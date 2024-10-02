@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     public int currentHealth = 5;
     public int healthRestore = 1;
     public bool flashlight = false;
+    public GameObject GameOverTitle;
 
     [Header("JetPack Stats")]
     public bool JetPackOn = false;
@@ -132,6 +133,15 @@ public class PlayerController : MonoBehaviour
             temp.y = jumpheight;
 
         myRB.velocity = (temp.x * transform.forward) + (temp.z * transform.right) + (temp.y * transform.up);
+
+        if (currentHealth <= 0)
+        {
+            GameOverTitle.gameObject.SetActive(true);
+        }
+        else
+        {
+            GameOverTitle.gameObject.SetActive(false);
+        }
     }
 
     //Weapon pickup
