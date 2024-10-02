@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
 {
     public bool IsPaused = false;
 
+    
     public GameObject PauseMenu;
     public PlayerController PlayerData;
 
@@ -66,6 +67,7 @@ public class GameManager : MonoBehaviour
                 else
                     Resume();
             }
+
         }
         else
         {
@@ -98,5 +100,6 @@ public class GameManager : MonoBehaviour
     public void RestartLevel()
     {
         LoadLevel(SceneManager.GetActiveScene().buildIndex);
+        Time.timeScale = 1;
     }
 }

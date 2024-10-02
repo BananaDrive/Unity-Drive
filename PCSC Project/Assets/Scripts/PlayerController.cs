@@ -14,12 +14,13 @@ public class PlayerController : MonoBehaviour
 
     public bool sprintMode = false;
 
+    public GameObject Death;
+
     [Header("Player Stats")]
     public int maxHealth = 5;
     public int currentHealth = 5;
     public int healthRestore = 1;
     public bool flashlight = false;
-    public GameObject GameOverTitle;
 
     [Header("JetPack Stats")]
     public bool JetPackOn = false;
@@ -136,11 +137,16 @@ public class PlayerController : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            GameOverTitle.gameObject.SetActive(true);
+            Death.gameObject.SetActive(true);
+            Time.timeScale = 0;
+
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
         else
         {
-            GameOverTitle.gameObject.SetActive(false);
+            Death.gameObject.SetActive(false);
+            Time.timeScale = 1;
         }
     }
 
