@@ -17,12 +17,11 @@ public class GameManager : MonoBehaviour
     public Image healthBar;
     public TextMeshProUGUI clipCounter;
     public TextMeshProUGUI AmmoCounter;
-    public TextMeshProUGUI HealthCounter;
 
     // Start is called before the first frame update
     void Start()
     {
-        if (SceneManager.GetActiveScene().buildIndex > 0)
+        if (SceneManager.GetActiveScene().buildIndex > 1)
         {
             PlayerData = GameObject.Find("Player").GetComponent<PlayerController>();
         }
@@ -34,7 +33,7 @@ public class GameManager : MonoBehaviour
 
         if (SceneManager.GetActiveScene().buildIndex > 0)
         {
-            healthBar.fillAmount = Mathf.Clamp((float)PlayerData.currentHealth / (float)PlayerData.maxHealth, 0, 1);
+            healthBar.fillAmount = Mathf.Clamp(PlayerData.currentHealth / (float)PlayerData.maxHealth, 0, 1);
 
             if (PlayerData.weaponId < 0)
             {
@@ -101,5 +100,18 @@ public class GameManager : MonoBehaviour
     {
         LoadLevel(SceneManager.GetActiveScene().buildIndex);
         Time.timeScale = 1;
+    }
+
+    public void PauseScreen()
+    {
+        PauseMenu.SetActive(true);
+        IsPaused = true;
+
+    }
+
+    public void SettingScreen()
+    {
+        PauseMenu.SetActive(false);
+        IsPaused = true;
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 //Access Modifier, Data Type, Name
 public class PlayerController : MonoBehaviour
@@ -15,6 +16,8 @@ public class PlayerController : MonoBehaviour
     public bool sprintMode = false;
 
     public GameObject Death;
+
+    public bool IsPaused;
 
     [Header("Player Stats")]
     public int maxHealth = 5;
@@ -70,6 +73,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         //Camera Movement
         camRotation.x += Input.GetAxisRaw("Mouse X") * mouseSensitivity;
         camRotation.y += Input.GetAxisRaw("Mouse Y") * mouseSensitivity;
@@ -80,7 +84,7 @@ public class PlayerController : MonoBehaviour
         transform.localRotation = Quaternion.AngleAxis(camRotation.x, Vector3.up);
 
         //Weapon use
-        if(Input.GetMouseButton(0) && canFire && currentClip > 0 && weaponId >= 1)
+        if(Input.GetMouseButton(0) && canFire && currentClip > 0 && weaponId >= 1 && (IsPaused = false))
         {
             GameObject b = Instantiate(bullet, weaponSlot.position, weaponSlot.rotation);
             b.GetComponent<Rigidbody>().AddForce(playerCam.transform.forward * bulletSpeed);
