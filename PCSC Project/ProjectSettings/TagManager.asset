@@ -9,6 +9,7 @@ TagManager:
   - Bullet
   - Basic Enemy
   - MovingBasicEnemy
+  - BreakAwayWall
   layers:
   - Default
   - TransparentFX

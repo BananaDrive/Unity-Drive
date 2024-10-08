@@ -7,18 +7,17 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     //Variables
+    GameManager gm;
     Rigidbody myRB;
     Camera playerCam; 
 
     Vector2 camRotation;
-
+    public Transform cameraHolder;
     public Transform weaponSlot;
 
     public bool sprintMode = false;
 
     public GameObject Death;
-
-    public bool IsPaused;
 
     [Header("Player Stats")]
     public int maxHealth = 5;
@@ -63,8 +62,10 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        gm = GameObject.Find("GameManager").GetComponent<GameManager>();
         myRB = GetComponent<Rigidbody>();
-        playerCam = transform.GetChild(0).GetComponent<Camera>();
+        playerCam = Camera.main;
+        cameraHolder = transform.GetChild(0);
 
         camRotation = Vector2.zero;
         Cursor.visible = false;
@@ -74,86 +75,90 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        //Camera Movement
-        camRotation.x += Input.GetAxisRaw("Mouse X") * mouseSensitivity;
-        camRotation.y += Input.GetAxisRaw("Mouse Y") * mouseSensitivity;
-
-        camRotation.y = Mathf.Clamp(camRotation.y, -camRotationLimit, camRotationLimit);
-
-        playerCam.transform.localRotation = Quaternion.AngleAxis(camRotation.y, Vector3.left);
-        transform.localRotation = Quaternion.AngleAxis(camRotation.x, Vector3.up);
-
-        //Weapon use
-        if(Input.GetMouseButton(0) && canFire && currentClip > 0 && weaponId >= 1 && (!IsPaused))
+        if (!gm.IsPaused)
         {
-            GameObject b = Instantiate(bullet, weaponSlot.position, weaponSlot.rotation);
-            b.GetComponent<Rigidbody>().AddForce(playerCam.transform.forward * bulletSpeed);
-            Destroy(b, bulletLifeSpan);
+            playerCam.transform.position = cameraHolder.position;
 
-            canFire = false;
-            currentClip--;
-            StartCoroutine("cooldownFire");
-            
-        }
+            //Camera Movement
+            camRotation.x += Input.GetAxisRaw("Mouse X") * mouseSensitivity;
+            camRotation.y += Input.GetAxisRaw("Mouse Y") * mouseSensitivity;
 
-        //Sprint Mechanics
-        Vector3 temp = myRB.velocity;
+            camRotation.y = Mathf.Clamp(camRotation.y, -camRotationLimit, camRotationLimit);
 
-        if (!sprintToggleOption)
-        {
-            if (Input.GetKey(KeyCode.LeftShift))
-                sprintMode = true;
+            playerCam.transform.rotation = Quaternion.Euler(-camRotation.y, camRotation.x, 0);
+            transform.localRotation = Quaternion.AngleAxis(camRotation.x, Vector3.up);
 
-            if (Input.GetKeyUp(KeyCode.LeftShift))
-                sprintMode = false;
-        }
+            //Weapon use
+            if (Input.GetMouseButton(0) && canFire && currentClip > 0 && weaponId >= 1 && (!gm.IsPaused))
+            {
+                GameObject b = Instantiate(bullet, weaponSlot.position, weaponSlot.rotation);
+                b.GetComponent<Rigidbody>().AddForce(playerCam.transform.forward * bulletSpeed);
+                Destroy(b, bulletLifeSpan);
 
-        //Reloading
-        if (Input.GetKeyDown(KeyCode.R))
-            reloadClip();
+                canFire = false;
+                currentClip--;
+                StartCoroutine("cooldownFire");
 
-        //Sprint Toggle
-        if (sprintToggleOption)
-        {
-            if (Input.GetKey(KeyCode.LeftShift) && (Input.GetAxisRaw("Vertical") > 0))
-                sprintMode = !sprintMode;
+            }
 
-            if (Input.GetAxisRaw("Vertical") <= 0)
-                sprintMode = false;
-        }
+            //Sprint Mechanics
+            Vector3 temp = myRB.velocity;
+
+            if (!sprintToggleOption)
+            {
+                if (Input.GetKey(KeyCode.LeftShift))
+                    sprintMode = true;
+
+                if (Input.GetKeyUp(KeyCode.LeftShift))
+                    sprintMode = false;
+            }
+
+            //Reloading
+            if (Input.GetKeyDown(KeyCode.R))
+                reloadClip();
+
+            //Sprint Toggle
+            if (sprintToggleOption)
+            {
+                if (Input.GetKey(KeyCode.LeftShift) && (Input.GetAxisRaw("Vertical") > 0))
+                    sprintMode = !sprintMode;
+
+                if (Input.GetAxisRaw("Vertical") <= 0)
+                    sprintMode = false;
+            }
 
 
-        if (!sprintMode)
-            temp.x = Input.GetAxisRaw("Vertical") * speed;
+            if (!sprintMode)
+                temp.x = Input.GetAxisRaw("Vertical") * speed;
 
-        if (sprintMode)
-            temp.x = Input.GetAxisRaw("Vertical") * speed * sprintMultiplier;
+            if (sprintMode)
+                temp.x = Input.GetAxisRaw("Vertical") * speed * sprintMultiplier;
 
-        if (sprintToggleBtn)
-            if (Input.GetKeyDown(KeyCode.Delete))
-                sprintToggleOption = (sprintToggleOption ? false : true);
-       
-        temp.z = Input.GetAxisRaw("Horizontal") * speed;
+            if (sprintToggleBtn)
+                if (Input.GetKeyDown(KeyCode.Delete))
+                    sprintToggleOption = (sprintToggleOption ? false : true);
 
-        //Jumping
-        if (Input.GetKeyDown(KeyCode.Space) && Physics.Raycast(transform.position, -transform.up, groundDetectDistance))
-            temp.y = jumpheight;
+            temp.z = Input.GetAxisRaw("Horizontal") * speed;
 
-        myRB.velocity = (temp.x * transform.forward) + (temp.z * transform.right) + (temp.y * transform.up);
+            //Jumping
+            if (Input.GetKeyDown(KeyCode.Space) && Physics.Raycast(transform.position, -transform.up, groundDetectDistance))
+                temp.y = jumpheight;
 
-        if (currentHealth <= 0)
-        {
-            Death.gameObject.SetActive(true);
-            Time.timeScale = 0;
+            myRB.velocity = (temp.x * transform.forward) + (temp.z * transform.right) + (temp.y * transform.up);
 
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
-        else
-        {
-            Death.gameObject.SetActive(false);
-            Time.timeScale = 1;
+            if (currentHealth <= 0)
+            {
+                Death.gameObject.SetActive(true);
+                Time.timeScale = 0;
+
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+            else
+            {
+                Death.gameObject.SetActive(false);
+                Time.timeScale = 1;
+            }
         }
     }
 
@@ -162,7 +167,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.tag == "Weapon")
         {
-            other.gameObject.transform.position = weaponSlot.position;
+            other.gameObject.transform.SetPositionAndRotation(weaponSlot.position, weaponSlot.rotation);
             other.gameObject.transform.SetParent(weaponSlot);
 
             switch(other.gameObject.name)

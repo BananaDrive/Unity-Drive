@@ -10,7 +10,8 @@ public class GameManager : MonoBehaviour
 {
     public bool IsPaused = false;
 
-    
+
+    public GameObject SaveProfiles;
     public GameObject PauseMenu;
     public PlayerController PlayerData;
 
@@ -66,6 +67,8 @@ public class GameManager : MonoBehaviour
                 else
                     Resume();
             }
+
+            
 
         }
         else
