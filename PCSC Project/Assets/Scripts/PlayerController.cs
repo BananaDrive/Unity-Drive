@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
@@ -84,7 +85,7 @@ public class PlayerController : MonoBehaviour
         transform.localRotation = Quaternion.AngleAxis(camRotation.x, Vector3.up);
 
         //Weapon use
-        if(Input.GetMouseButton(0) && canFire && currentClip > 0 && weaponId >= 1 && (IsPaused = false))
+        if(Input.GetMouseButton(0) && canFire && currentClip > 0 && weaponId >= 1 && (!IsPaused))
         {
             GameObject b = Instantiate(bullet, weaponSlot.position, weaponSlot.rotation);
             b.GetComponent<Rigidbody>().AddForce(playerCam.transform.forward * bulletSpeed);
@@ -93,6 +94,7 @@ public class PlayerController : MonoBehaviour
             canFire = false;
             currentClip--;
             StartCoroutine("cooldownFire");
+            
         }
 
         //Sprint Mechanics
@@ -102,6 +104,7 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.LeftShift))
                 sprintMode = true;
+
             if (Input.GetKeyUp(KeyCode.LeftShift))
                 sprintMode = false;
         }
