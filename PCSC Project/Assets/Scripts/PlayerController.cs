@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Movement Settings")]
     public float speed = 10.0f;
-    public float sprintMultiplier = 2.5f;
+    public float sprintMultiplier = 1.5f;
     public float jumpheight = 5.0f;
 
     [Header("User Settings")]

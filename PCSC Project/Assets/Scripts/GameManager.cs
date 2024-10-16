@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject SaveProfiles;
     public GameObject PauseMenu;
+    public GameObject PlayerInterface;
     public PlayerController PlayerData;
 
     public Image healthBar;
@@ -54,6 +55,7 @@ public class GameManager : MonoBehaviour
             {
                 if (!IsPaused)
                 {
+                    PlayerInterface.SetActive(false);
                     PauseMenu.SetActive(true);
 
                     Cursor.lockState = CursorLockMode.None;
@@ -79,6 +81,7 @@ public class GameManager : MonoBehaviour
 
     public void Resume()
     {
+        PlayerInterface.SetActive(true);
         PauseMenu.SetActive(false);
 
         Time.timeScale = 1;
@@ -107,6 +110,7 @@ public class GameManager : MonoBehaviour
 
     public void PauseScreen()
     {
+        PlayerInterface.SetActive(false);
         PauseMenu.SetActive(true);
         IsPaused = true;
 
