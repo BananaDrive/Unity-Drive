@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     Vector2 camRotation;
     public Transform cameraHolder;
     public Transform weaponSlot;
+    public Transform FlashLight;
 
     public bool sprintMode = false;
 
@@ -165,6 +166,12 @@ public class PlayerController : MonoBehaviour
     //Weapon pickup
     private void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject.tag == "FlashLights")
+        {
+            other.gameObject.transform.SetPositionAndRotation(FlashLight.position, FlashLight.rotation);
+            other.gameObject.transform.SetParent(FlashLight);
+        }
+
         if (other.gameObject.tag == "Weapon")
         {
             other.gameObject.transform.SetPositionAndRotation(weaponSlot.position, weaponSlot.rotation);
