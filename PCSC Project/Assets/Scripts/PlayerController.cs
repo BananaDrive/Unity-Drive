@@ -41,6 +41,12 @@ public class PlayerController : MonoBehaviour
     public float reloadAmount = 0;
     public bool canFire = true;
 
+    [Header("FlashLight Stats")]
+    public GameObject Flash;
+    public int lightId = 0;
+    public float range = 0;
+    public float charge = 0;
+
     [Header("projectiles")]
     public GameObject bullet;
     public float bulletSpeed = 0;
@@ -162,16 +168,10 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
     //Weapon pickup
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "FlashLights")
-        {
-            other.gameObject.transform.SetPositionAndRotation(FlashLight.position, FlashLight.rotation);
-            other.gameObject.transform.SetParent(FlashLight);
-        }
-
+        
         if (other.gameObject.tag == "Weapon")
         {
             other.gameObject.transform.SetPositionAndRotation(weaponSlot.position, weaponSlot.rotation);
@@ -215,6 +215,12 @@ public class PlayerController : MonoBehaviour
     //Pickups
     private void OnCollisionEnter(Collision collision)
     {
+        if(collision.gameObject.tag == "FlashLights" && lightId <= 0)
+        {
+            Flash.gameObject.SetActive(true);
+        }
+
+
         if((currentHealth < maxHealth) && collision.gameObject.tag == "healthPickUp")
         {
             currentHealth += healthRestore;
