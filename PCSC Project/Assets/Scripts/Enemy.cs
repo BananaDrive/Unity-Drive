@@ -28,10 +28,15 @@ public class EnemyAi : MonoBehaviour
 	void Update()
 	{
 		float DistanceToPlayer = Vector3.Distance(transform.position, Player.position);
-		while (DistanceToPlayer <= VisionRange)
+
+		if (DistanceToPlayer <= VisionRange)
 		{
-			agent.destination = player.transform.position;
+			agent.destination = Player.position;
+			agent.isStopped = false;
 		}
+
+		else
+			agent.isStopped = true;
 
 		if (health <= 0)
 			Destroy(gameObject);
