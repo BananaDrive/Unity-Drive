@@ -14,7 +14,7 @@ public class EnemyAi : MonoBehaviour
 	public int damageGiven = 1;
 	public int damageRecieved = 1;
 	public float pushBackForce = 10000;
-	public float VisionRange = 15.0f;
+	public float VisionRange = 5.0f;
     public Transform Player;
 
     // Start is called before the first frame update
@@ -28,7 +28,10 @@ public class EnemyAi : MonoBehaviour
 	void Update()
 	{
 		float DistanceToPlayer = Vector3.Distance(transform.position, Player.position);
-		if (DistanceToPlayer <= VisionRange)
+		while (DistanceToPlayer <= VisionRange)
+		{
+			agent.destination = player.transform.position;
+		}
 
 		if (health <= 0)
 			Destroy(gameObject);
