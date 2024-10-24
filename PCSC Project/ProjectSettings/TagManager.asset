@@ -11,6 +11,9 @@ TagManager:
   - MovingBasicEnemy
   - BreakAwayWall
   - FlashLights
+  - Brute
+  - Boss
+  - Phys Tower
   layers:
   - Default
   - TransparentFX

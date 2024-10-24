@@ -246,6 +246,16 @@ public class PlayerController : MonoBehaviour
             currentHealth -= 1;
         }
 
+        if (collision.gameObject.tag == "Brute")
+        {
+            currentHealth -= 2;
+        }
+
+        if (collision.gameObject.tag == "Boss")
+        {
+            currentHealth -= 4;
+        }
+
     }
 
     //Reloading

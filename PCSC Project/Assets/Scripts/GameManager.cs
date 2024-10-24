@@ -5,17 +5,22 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEngine.Audio;
 
 public class GameManager : MonoBehaviour
 {
     public bool IsPaused = false;
 
+[Header("Volume")]
+    public AudioMixer audioMixer;
 
+[Header("Main Pieces")]
     public GameObject SaveProfiles;
     public GameObject PauseMenu;
     public GameObject PlayerInterface;
     public PlayerController PlayerData;
 
+[Header("Game UI")]
     public Image healthBar;
     public TextMeshProUGUI clipCounter;
     public TextMeshProUGUI AmmoCounter;
@@ -120,5 +125,15 @@ public class GameManager : MonoBehaviour
     {
         PauseMenu.SetActive(false);
         IsPaused = true;
+    }
+
+    public void SetVolume(float volume)
+    {
+        audioMixer.SetFloat("Volume", volume);
+    }
+
+    public void SetQuality (int QualityLvl)
+    {
+        QualitySettings.SetQualityLevel(QualityLvl);
     }
 }
