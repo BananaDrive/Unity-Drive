@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 //Access Modifier, Data Type, Name
 public class PlayerController : MonoBehaviour
 {
@@ -215,11 +216,10 @@ public class PlayerController : MonoBehaviour
     //Pickups
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.tag == "FlashLights" && lightId <= 0)
+        if(collision.gameObject.tag == "Portal")
         {
-            Flash.gameObject.SetActive(true);
+            SceneManager.LoadScene(2);
         }
-
 
         if((currentHealth < maxHealth) && collision.gameObject.tag == "healthPickUp")
         {

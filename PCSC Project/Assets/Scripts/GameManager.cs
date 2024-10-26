@@ -30,6 +30,9 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI AmmoCounter;
 
 
+    public TMP_Dropdown Quality;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -37,7 +40,11 @@ public class GameManager : MonoBehaviour
         {
             PlayerData = GameObject.Find("Player").GetComponent<PlayerController>();
         }
-        
+
+        int savedQualityLevel = PlayerPrefs.GetInt("QualityLevel", QualitySettings.GetQualityLevel());
+        SetQuality(savedQualityLevel);
+
+        Quality.value = savedQualityLevel;
     }
 
     // Update is called once per frame
@@ -78,6 +85,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void SetQuality(int QualityLvl)
+    {
+        QualitySettings.SetQualityLevel(QualityLvl);
+
+        PlayerPrefs.SetInt("QualityLevel", QualityLvl);
+        PlayerPrefs.Save();
+    }
+
     public void Resume()
     {
         PlayerInterface.SetActive(true);
@@ -114,6 +129,7 @@ public class GameManager : MonoBehaviour
         IsPaused = true;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        Time.timeScale = 0;
 
     }
     public void CreditsIn()
@@ -151,10 +167,5 @@ public class GameManager : MonoBehaviour
     public void SetVolume(float volume)
     {
         audioMixer.SetFloat("Volume", volume);
-    }
-
-    public void SetQuality (int QualityLvl)
-    {
-        QualitySettings.SetQualityLevel(QualityLvl);
     }
 }
