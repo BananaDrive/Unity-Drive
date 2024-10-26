@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.Audio;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -17,6 +18,9 @@ public class GameManager : MonoBehaviour
 [Header("Main Pieces")]
     public GameObject SaveProfiles;
     public GameObject PauseMenu;
+    public GameObject SettingsMenu;
+    public GameObject Credits;
+    public GameObject MainMenu;
     public GameObject PlayerInterface;
     public PlayerController PlayerData;
 
@@ -25,13 +29,15 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI clipCounter;
     public TextMeshProUGUI AmmoCounter;
 
+
     // Start is called before the first frame update
     void Start()
     {
-        if (SceneManager.GetActiveScene().buildIndex > 1)
+        if (SceneManager.GetActiveScene().buildIndex > 0)
         {
             PlayerData = GameObject.Find("Player").GetComponent<PlayerController>();
         }
+        
     }
 
     // Update is called once per frame
@@ -56,24 +62,7 @@ public class GameManager : MonoBehaviour
                 AmmoCounter.text = "Ammo: " + PlayerData.currentAmmo;
             }
 
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                if (!IsPaused)
-                {
-                    PlayerInterface.SetActive(false);
-                    PauseMenu.SetActive(true);
 
-                    Cursor.lockState = CursorLockMode.None;
-                    Cursor.visible = true;
-
-                    Time.timeScale = 0;
-
-                    IsPaused = true;
-                }
-
-                else
-                    Resume();
-            }
 
             
 
@@ -81,6 +70,11 @@ public class GameManager : MonoBehaviour
         else
         {
             Time.timeScale = 1;
+        }
+
+        if(Input.GetKey(KeyCode.Escape))
+        {
+            PauseScreen();
         }
     }
 
@@ -118,13 +112,40 @@ public class GameManager : MonoBehaviour
         PlayerInterface.SetActive(false);
         PauseMenu.SetActive(true);
         IsPaused = true;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
 
     }
-
-    public void SettingScreen()
+    public void CreditsIn()
+    {
+        Credits.SetActive(true);
+        MainMenu.SetActive(false);
+    }
+    public void CreditsExit()
+    {
+        Credits.SetActive(false);
+        MainMenu.SetActive(true);
+    }
+    public void SettingScreenMenu()
+    {
+        MainMenu.SetActive(false);
+        SettingsMenu.SetActive(true);
+    }
+    public void SettingMenu()
     {
         PauseMenu.SetActive(false);
+        SettingsMenu.SetActive(true);
         IsPaused = true;
+    }
+    public void SettingExitLvl()
+    {
+        SettingsMenu.SetActive(false);
+        PauseScreen();
+    }
+    public void SettingExitMenu()
+    {
+        SettingsMenu.SetActive(false);
+        MainMenu.SetActive(true);
     }
 
     public void SetVolume(float volume)

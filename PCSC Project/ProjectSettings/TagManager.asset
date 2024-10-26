@@ -14,6 +14,9 @@ TagManager:
   - Brute
   - Boss
   - Phys Tower
+  - Letters
+  - Solid
+  - ammoPickUp
   layers:
   - Default
   - TransparentFX
